@@ -1,28 +1,34 @@
-close all;
-clear;
-clc;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Cleaning Workspace & Importing Functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+close all; % Closes all figures
+clear; # Clears variables from workspace
+clc; % Clears all text from command window
 
-% Importing functions
+% Importing functions from folders with given relative path
+addpath(genpath("./formulas"));
 addpath(genpath("./response_integration"));
 addpath(genpath("./direct_integration"));
 
-dt = 0.005; # Time step | Seconds
-t = 0:dt:2; # Time vector (t(i), t(i + 1), t(i + 2), ...) | Seconds
-F = get_force(t); # Force vector (F(t(i), F(t(i + 1)), ...) | Newtons
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initializing Variables
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+dt = 0.005; % Time step | Seconds
+t = 0:dt:2; % Time vector (t(i), t(i + 1), t(i + 2), ...) | Seconds
+F = get_force(t); % Force vector (F(t(i), F(t(i + 1)), ...) | Newtons
 x0 = 0; % Initial position | Meters
 xdot0 = 0; % Initial velocity | Meters per Second
 M = 1; % Equivalent Mass | Kilograms
-K = (600 + 400 + 200); % Spring Constant | Newtons per Meter
+K = (600 + 400 + 100); % Spring Constant | Newtons per Meter
 
 % Calculating Damping Constant C
-A0_over_An = 1/0.25; # Ratio between amplitudes
-wn = sqrt(K / M); # Natural frequency
-n = 5; # Number of oscilations
-sigma = log(A0_over_An) / n;
-zeta_ = sigma / sqrt((2 * pi)^2 + (sigma)^2);
-C = 2 * M * wn * zeta_; % Damping Constant | Kilograms per Second
+N = 5; % Number of oscilations
+A_ratio = 1/0.25; % Ratio between initial amplitude (A0) and amplitude in time NT (A(NT))
+C = get_damping_coefficient(A_ratio, M, K, N); % Damping Constant | Kilograms per Second
 
-% Integration Methods
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Numerical Integration Methods
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 [x, xdot, x2dot] = central_difference_integration(t, F, x0, xdot0, M, K, C);
 figure;
@@ -46,4 +52,12 @@ hold on;
 
 [x5, xdot, x2dot] = linear_approximation_int(t, F, x0, xdot0, M, K, C);
 plot(t, x5);
-hold off;
+hold on;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Analytical Solution using Laplace Transform
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+x_analytical = get_inverse_laplace_transform(t);
+
+plot(t, x_analytical);
+hold of;

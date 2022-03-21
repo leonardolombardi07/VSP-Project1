@@ -50,7 +50,7 @@ function [x, xdot, x2dot] = central_difference_integration(t, F, x0, xdot0, m, k
 
         % ALERT: DO NOT CHANGE THE ORDER OF THE VARIABLES BELOW
         % xdot(i + 1), for example, accesses the variable x(i + 1),
-        % which is defined in the previous
+        % which is defined in the previous line
         x(i + 1) = F_circunflex / K_circunflex;
         xdot(i) = (x(i + 1) - x_iminus1) / (2 * dt);
         x2dot(i) = (x(i + 1) - 2 * x(i) + x_iminus1) / (dt^2);
