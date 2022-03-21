@@ -67,6 +67,8 @@ function [x, xdot, x2dot] = constant_approximation_int(t, F, x0, xdot0, m, k, c)
         xdot(i) = first_factor + second_factor * ...
             (third_factor + fourth_factor + fifth_factor);
 
+        % Calculating x2dot(i)
+        x2dot(i) = (F(i) - c * xdot(i) - k * x(i)) / m;
     end
 
 end

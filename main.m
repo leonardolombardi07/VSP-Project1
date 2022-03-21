@@ -7,6 +7,7 @@ clc; % Clears all text from command window
 
 % Importing functions from folders with given relative path
 addpath(genpath("./formulas"));
+addpath(genpath("./plotting"));
 addpath(genpath("./response_integration"));
 addpath(genpath("./direct_integration"));
 
@@ -30,34 +31,48 @@ C = get_damping_coefficient(A_ratio, M, K, N); % Damping Constant | Kilograms pe
 % Numerical Integration Methods
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-[x, xdot, x2dot] = central_difference_integration(t, F, x0, xdot0, M, K, C);
-figure;
-plot(t, x);
-hold on;
+% Direct Integration
 
-teta = 1.0;
-[x2, xdot, x2dot] = wilson_integration(t, F, x0, xdot0, M, K, C, teta);
-plot(t, x2);
-hold on;
+% Wilson Method
+teta = 1.4;
+[x_wilson, xdot_wilson, x2dot_wilson] = wilson_integration(t, F, x0, xdot0, M, K, C, teta);
+plot_method(t, x_wilson, xdot_wilson, x2dot_wilson, "Integration with Method of Wilson");
+text(max(t) * 0.8, max(x2dot_wilson) * 0.6, strcat("Teta: ", num2str(teta)), "FontWeight", "bold");
 
-alfa = 1/6; beta_ = 0.5;
-[x3, xdot, x2dot] = newmark_integration(t, F, x0, xdot0, M, K, C, alfa, beta_);
-plot(t, x3);
-hold on;
+% Newmark Method
+alfa = 1/6; beta_ = 1/1.5;
+[x3_newmark, xdot_newmark, x2dot_newmark] = newmark_integration(t, F, x0, xdot0, M, K, C, alfa, beta_);
+plot_method(t, x3_newmark, xdot_newmark, x2dot_newmark, "Integration with Method of Newmark 1");
+text(max(t) * 0.8, max(x2dot_newmark) * 0.6, {strcat("Alfa: ", num2str(alfa)), strcat("Beta: ", num2str(beta_))}, "FontWeight", "bold");
+
+alfa = 1/6; beta_ = 1/2;
+[x3_newmark, xdot_newmark, x2dot_newmark] = newmark_integration(t, F, x0, xdot0, M, K, C, alfa, beta_);
+plot_method(t, x3_newmark, xdot_newmark, x2dot_newmark, "Integration with Method of Newmark 2");
+text(max(t) * 0.8, max(x2dot_newmark) * 0.6, {strcat("Alfa: ", num2str(alfa)), strcat("Beta: ", num2str(beta_))}, "FontWeight", "bold");
+
+alfa = 1/6; beta_ = 1/3;
+[x3_newmark, xdot_newmark, x2dot_newmark] = newmark_integration(t, F, x0, xdot0, M, K, C, alfa, beta_);
+plot_method(t, x3_newmark, xdot_newmark, x2dot_newmark, "Integration with Method of Newmark 3");
+text(max(t) * 0.8, max(x2dot_newmark) * 0.6, {strcat("Alfa: ", num2str(alfa)), strcat("Beta: ", num2str(beta_))}, "FontWeight", "bold");
+
+% Central Difference Method
+[x_central, xdot_central, x2dot_central] = central_difference_integration(t, F, x0, xdot0, M, K, C);
+plot_method(t, x_central, xdot_central, x2dot_central, "Integration with Method of Central Difference");
 
 % Response Integration
-[x4, xdot, x2dot] = constant_approximation_int(t, F, x0, xdot0, M, K, C);
-plot(t, x4);
-hold on;
 
-[x5, xdot, x2dot] = linear_approximation_int(t, F, x0, xdot0, M, K, C);
-plot(t, x5);
-hold on;
+% Constant Approximation Method
+[x_const, xdot_const, x2dot_const] = constant_approximation_int(t, F, x0, xdot0, M, K, C);
+plot_method(t, x_const, xdot_const, x2dot_const, "Response Integration by Constant Approximation");
+
+% Linear Approximation Method
+[x_linear, xdot_linear, x2dot_linear] = linear_approximation_int(t, F, x0, xdot0, M, K, C);
+plot_method(t, x_linear, xdot_linear, x2dot_linear, "Response Integration by Linear Approximation");
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Analytical Solution using Laplace Transform
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 x_analytical = get_inverse_laplace_transform(t);
-
-plot(t, x_analytical);
-hold off;
+xdot_analytical = diff(x_analytical) / dt;
+x2dot_analytical = diff(xdot_analytical) / dt;
+plot_method(t, x_analytical, xdot_analytical, x2dot_analytical, "Analytical solution (using Laplace transform and Heaviside step function");
