@@ -24,18 +24,19 @@ function [x, xdot, x2dot] = central_difference_integration(t, F, x0, xdot0, m, k
 
     % Initializing Variables
     dt = t(2) - t(1);
-    x = zeros(length(t), 1); xdot = x; x2dot = x;
+    x = zeros(length(t) + 1, 1);
+    xdot = zeros(length(t), 1); x2dot = xdot;
 
     % Initial Conditions
     x2dot0 = (F(1) - c * xdot0 - k * x0) / m;
     x(1) = x0; xdot(1) = xdot0; x2dot(1) = x2dot0;
 
     % Integration Constants
-    a = (m / (dt^2)) - (c / (2 * dt));
-    b = k - ((2 * m) / (dt^2));
+    a0 = ((2 * m) / (dt^2)) - k;
+    a1 = (c / (2 * dt)) - (m / (dt^2));
     K_circunflex = (m / (dt^2)) + (c / (2 * dt));
 
-    for i = 1:(length(t) - 1)
+    for i = 1:(length(t))
 
         % We define the variable x_iminus1 because, in the first iteration
         % (when i=1), x(i-1) is x(0), which does not exist
@@ -45,14 +46,15 @@ function [x, xdot, x2dot] = central_difference_integration(t, F, x0, xdot0, m, k
             x_iminus1 = x(i - 1);
         end
 
-        F_circunflex = F(i) - a * x_iminus1 - b * x(i);
+        F_circunflex = a0 * x(i) + a1 * x_iminus1 + F(i);
 
         % ALERT: DO NOT CHANGE THE ORDER OF THE VARIABLES BELOW
         % xdot(i + 1), for example, accesses the variable x(i + 1),
-        % which is defined in the previous line
+        % which is defined in the previous
         x(i + 1) = F_circunflex / K_circunflex;
-        xdot(i + 1) = (x(i + 1) + x_iminus1) / (2 * dt);
-        x2dot(i + 1) = (x(i + 1) - 2 * x(i) + x_iminus1) / (dt^2);
+        xdot(i) = (x(i + 1) - x_iminus1) / (2 * dt);
+        x2dot(i) = (x(i + 1) - 2 * x(i) + x_iminus1) / (dt^2);
     end
 
+    x = x(1:end - 1);
 end
