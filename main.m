@@ -60,4 +60,4 @@ hold on;
 x_analytical = get_inverse_laplace_transform(t);
 
 plot(t, x_analytical);
-hold of;
+hold off;
