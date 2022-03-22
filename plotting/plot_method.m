@@ -24,6 +24,6 @@ function _ = plot_method(t, x, xdot, x2dot, title_)
     ylabel("Acceleration [m/s^2]");
     grid on;
 
-    % Uncomment line below to save plot as png file
+    % Comment/Uncomment line below to save plot as png file
     saveas(figure_, strcat("./generated_figures/", title_, ".png"));
 end
