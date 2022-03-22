@@ -37,23 +37,19 @@ C = get_damping_coefficient(A_ratio, M, K, N); % Damping Constant | Kilograms pe
 teta = 1.4;
 [x_wilson, xdot_wilson, x2dot_wilson] = wilson_integration(t, F, x0, xdot0, M, K, C, teta);
 plot_method(t, x_wilson, xdot_wilson, x2dot_wilson, "Integration with Method of Wilson");
-text(max(t) * 0.8, max(x2dot_wilson) * 0.6, strcat("Teta: ", num2str(teta)), "FontWeight", "bold");
 
 % Newmark Method
 alfa = 1/6; beta_ = 1/1.5;
 [x3_newmark, xdot_newmark, x2dot_newmark] = newmark_integration(t, F, x0, xdot0, M, K, C, alfa, beta_);
 plot_method(t, x3_newmark, xdot_newmark, x2dot_newmark, "Integration with Method of Newmark 1");
-text(max(t) * 0.8, max(x2dot_newmark) * 0.6, {strcat("Alfa: ", num2str(alfa)), strcat("Beta: ", num2str(beta_))}, "FontWeight", "bold");
 
 alfa = 1/6; beta_ = 1/2;
 [x3_newmark, xdot_newmark, x2dot_newmark] = newmark_integration(t, F, x0, xdot0, M, K, C, alfa, beta_);
 plot_method(t, x3_newmark, xdot_newmark, x2dot_newmark, "Integration with Method of Newmark 2");
-text(max(t) * 0.8, max(x2dot_newmark) * 0.6, {strcat("Alfa: ", num2str(alfa)), strcat("Beta: ", num2str(beta_))}, "FontWeight", "bold");
 
 alfa = 1/6; beta_ = 1/3;
 [x3_newmark, xdot_newmark, x2dot_newmark] = newmark_integration(t, F, x0, xdot0, M, K, C, alfa, beta_);
 plot_method(t, x3_newmark, xdot_newmark, x2dot_newmark, "Integration with Method of Newmark 3");
-text(max(t) * 0.8, max(x2dot_newmark) * 0.6, {strcat("Alfa: ", num2str(alfa)), strcat("Beta: ", num2str(beta_))}, "FontWeight", "bold");
 
 % Central Difference Method
 [x_central, xdot_central, x2dot_central] = central_difference_integration(t, F, x0, xdot0, M, K, C);
