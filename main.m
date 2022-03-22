@@ -39,17 +39,24 @@ teta = 1.4;
 plot_method(t, x_wilson, xdot_wilson, x2dot_wilson, "Integration with Method of Wilson");
 
 % Newmark Method
-alfa = 1/6; beta_ = 1/1.5;
-[x3_newmark, xdot_newmark, x2dot_newmark] = newmark_integration(t, F, x0, xdot0, M, K, C, alfa, beta_);
-plot_method(t, x3_newmark, xdot_newmark, x2dot_newmark, "Integration with Method of Newmark 1");
+alfa = 1/6;
 
-alfa = 1/6; beta_ = 1/2;
-[x3_newmark, xdot_newmark, x2dot_newmark] = newmark_integration(t, F, x0, xdot0, M, K, C, alfa, beta_);
-plot_method(t, x3_newmark, xdot_newmark, x2dot_newmark, "Integration with Method of Newmark 2");
+beta_a = 1/1.5;
+[xa_newmark, xadot_newmark, xa2dot_newmark] = newmark_integration(t, F, x0, xdot0, M, K, C, alfa, beta_a);
+% plot_method(t, xa_newmark, xadot_newmark, xa2dot_newmark "Integration with Method of Newmark 1");
 
-alfa = 1/6; beta_ = 1/3;
-[x3_newmark, xdot_newmark, x2dot_newmark] = newmark_integration(t, F, x0, xdot0, M, K, C, alfa, beta_);
-plot_method(t, x3_newmark, xdot_newmark, x2dot_newmark, "Integration with Method of Newmark 3");
+beta_b = 1/2;
+[xb_newmark, xbdot_newmark, xb2dot_newmark] = newmark_integration(t, F, x0, xdot0, M, K, C, alfa, beta_b);
+% plot_method(t, xb_newmark, xbdot_newmark, xb2dot_newmark, "Integration with Method of Newmark 2");
+
+beta_c = 1/3;
+[xc_newmark, xcdot_newmark, xc2dot_newmark] = newmark_integration(t, F, x0, xdot0, M, K, C, alfa, beta_c);
+% plot_method(t, xc_newmark, xcdot_newmark, xc2dot_newmark, "Integration with Method of Newmark 3");
+
+plot_newmark_comparison(t, alfa,
+xa_newmark, xadot_newmark, xa2dot_newmark, beta_a,
+xb_newmark, xbdot_newmark, xb2dot_newmark, beta_b,
+xc_newmark, xcdot_newmark, xc2dot_newmark, beta_c);
 
 % Central Difference Method
 [x_central, xdot_central, x2dot_central] = central_difference_integration(t, F, x0, xdot0, M, K, C);
@@ -72,3 +79,14 @@ x_analytical = get_inverse_laplace_transform(t);
 xdot_analytical = diff(x_analytical) / dt;
 x2dot_analytical = diff(xdot_analytical) / dt;
 plot_method(t, x_analytical, xdot_analytical, x2dot_analytical, "Analytical solution (using Laplace transform and Heaviside step function");
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Comparison Results
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+plot_numerical_vs_analytical(t,
+x_wilson, xdot_wilson, x2dot_wilson,
+xa_newmark, xadot_newmark, xa2dot_newmark,
+x_central, xdot_central, x2dot_central,
+x_const, xdot_const, x2dot_const,
+x_linear, xdot_linear, x2dot_linear,
+x_analytical, xdot_analytical, x2dot_analytical)
