@@ -10,6 +10,7 @@ addpath(genpath("./formulas"));
 addpath(genpath("./plotting"));
 addpath(genpath("./response_integration"));
 addpath(genpath("./direct_integration"));
+addpath(genpath("./analytical"));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Initializing Variables
@@ -33,60 +34,57 @@ C = get_damping_coefficient(A_ratio, M, K, N); % Damping Constant | Kilograms pe
 
 % Direct Integration
 
-% Wilson Method
-teta = 1.4;
+teta = 1.4; alfa = 1/6; beta_a = 1/1.5; beta_b = 1/2; beta_c = 1/3;
 [x_wilson, xdot_wilson, x2dot_wilson] = wilson_integration(t, F, x0, xdot0, M, K, C, teta);
-plot_method(t, x_wilson, xdot_wilson, x2dot_wilson, "Integration with Method of Wilson");
-
-% Newmark Method
-alfa = 1/6;
-
-beta_a = 1/1.5;
 [xa_newmark, xadot_newmark, xa2dot_newmark] = newmark_integration(t, F, x0, xdot0, M, K, C, alfa, beta_a);
-% plot_method(t, xa_newmark, xadot_newmark, xa2dot_newmark "Integration with Method of Newmark 1");
-
-beta_b = 1/2;
 [xb_newmark, xbdot_newmark, xb2dot_newmark] = newmark_integration(t, F, x0, xdot0, M, K, C, alfa, beta_b);
-% plot_method(t, xb_newmark, xbdot_newmark, xb2dot_newmark, "Integration with Method of Newmark 2");
-
-beta_c = 1/3;
 [xc_newmark, xcdot_newmark, xc2dot_newmark] = newmark_integration(t, F, x0, xdot0, M, K, C, alfa, beta_c);
-% plot_method(t, xc_newmark, xcdot_newmark, xc2dot_newmark, "Integration with Method of Newmark 3");
-
-plot_newmark_comparison(t, alfa,
-xa_newmark, xadot_newmark, xa2dot_newmark, beta_a,
-xb_newmark, xbdot_newmark, xb2dot_newmark, beta_b,
-xc_newmark, xcdot_newmark, xc2dot_newmark, beta_c);
-
-% Central Difference Method
 [x_central, xdot_central, x2dot_central] = central_difference_integration(t, F, x0, xdot0, M, K, C);
-plot_method(t, x_central, xdot_central, x2dot_central, "Integration with Method of Central Difference");
-
-% Response Integration
-
-% Constant Approximation Method
 [x_const, xdot_const, x2dot_const] = constant_approximation_int(t, F, x0, xdot0, M, K, C);
-plot_method(t, x_const, xdot_const, x2dot_const, "Response Integration by Constant Approximation");
-
-% Linear Approximation Method
 [x_linear, xdot_linear, x2dot_linear] = linear_approximation_int(t, F, x0, xdot0, M, K, C);
-plot_method(t, x_linear, xdot_linear, x2dot_linear, "Response Integration by Linear Approximation");
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Analytical Solution using Laplace Transform
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-x_analytical = get_inverse_laplace_transform(t);
+x_analytical = solve_hardcoded(t);
 xdot_analytical = diff(x_analytical) / dt;
 x2dot_analytical = diff(xdot_analytical) / dt;
-plot_method(t, x_analytical, xdot_analytical, x2dot_analytical, "Analytical solution (using Laplace transform and Heaviside step function");
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Comparison Results
+% Plots and Comparisons
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Plot all methods separately
+plot_method(t, x_wilson, xdot_wilson, x2dot_wilson, "Integration with Method of Wilson");
+plot_method(t, xa_newmark, xadot_newmark, xa2dot_newmark, "Integration with Method of Newmark 1");
+plot_method(t, xb_newmark, xbdot_newmark, xb2dot_newmark, "Integration with Method of Newmark 2");
+plot_method(t, xc_newmark, xcdot_newmark, xc2dot_newmark, "Integration with Method of Newmark 3");
+plot_method(t, x_central, xdot_central, x2dot_central, "Integration with Method of Central Difference");
+plot_method(t, x_const, xdot_const, x2dot_const, "Response Integration by Constant Approximation");
+plot_method(t, x_linear, xdot_linear, x2dot_linear, "Response Integration by Linear Approximation");
+plot_method(t, x_analytical, xdot_analytical, x2dot_analytical, "Analytical solution (using Laplace transform and Heaviside step function");
+
+% Plot all methods together
 plot_numerical_vs_analytical(t,
 x_wilson, xdot_wilson, x2dot_wilson,
 xa_newmark, xadot_newmark, xa2dot_newmark,
 x_central, xdot_central, x2dot_central,
 x_const, xdot_const, x2dot_const,
 x_linear, xdot_linear, x2dot_linear,
-x_analytical, xdot_analytical, x2dot_analytical)
+x_analytical, xdot_analytical, x2dot_analytical);
+
+% Plot Newmark comparison for different betas
+plot_newmark_comparison(t, alfa,
+xa_newmark, xadot_newmark, xa2dot_newmark, beta_a,
+xb_newmark, xbdot_newmark, xb2dot_newmark, beta_b,
+xc_newmark, xcdot_newmark, xc2dot_newmark, beta_c);
+
+% Write text files containing data from displacement, velocity and acceleration
+X = [t; x_wilson'; xa_newmark'; xb_newmark'; xc_newmark'; x_central'; x_const'; x_linear'; x_analytical'];
+write_text_file(X, "Displacement");
+
+XDOT = [t; xdot_wilson'; xadot_newmark'; xbdot_newmark'; xcdot_newmark'; xdot_central'; xdot_const'; xdot_linear'; [xdot_analytical; 0]'];
+write_text_file(XDOT, "Velocity");
+
+X2DOT = [t; x2dot_wilson'; xa2dot_newmark'; xb2dot_newmark'; xc2dot_newmark'; x2dot_central'; x2dot_const'; x2dot_linear'; [x2dot_analytical; 0; 0]'];
+write_text_file(X2DOT, "Acceleration");

@@ -1,4 +1,4 @@
-function f = get_inverse_laplace_transform(t)
+function f = solve_hardcoded(t)
     % Inverse Laplace Transform of function F(s) (see below)
     %--------------------------------------------------------------------------
     % Calculates the inverse laplace transform of the function
