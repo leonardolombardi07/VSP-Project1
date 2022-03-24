@@ -46,6 +46,11 @@ teta = 1.4; alfa = 1/6; beta_a = 1/1.5; beta_b = 1/2; beta_c = 1/3;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Analytical Solution using Laplace Transform
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Note: you can use the function "solve_by_laplace" if you are in a MATLAB
+% environment and have the Symbolic Math Toolbox package installed
+% [x_analytical, xdot_analytical, x2dot_analytical] = solve_by_laplace(t, M, C, K);
+
 x_analytical = solve_hardcoded(t);
 xdot_analytical = diff(x_analytical) / dt;
 x2dot_analytical = diff(xdot_analytical) / dt;

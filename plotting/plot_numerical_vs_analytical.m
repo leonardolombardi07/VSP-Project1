@@ -5,6 +5,9 @@ function _ = plot_numerical_vs_analytical(t,
     x_const, xdot_const, x2dot_const,
     x_linear, xdot_linear, x2dot_linear,
     x_analytical, xdot_analytical, x2dot_analytical)
+    % Creates a figure with three plots in a row corresponding to
+    % a comparison of displacement, velocity and acceleration for different
+    % numerical methods AND the analytical method
 
     xlabel_ = "Time [s]";
     title_ = "Comparison of Wilson, Newmark, Central Difference, Constant Approximation, Linear Approximation and Analytical methods";

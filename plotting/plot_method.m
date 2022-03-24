@@ -1,4 +1,6 @@
 function _ = plot_method(t, x, xdot, x2dot, title_)
+    % Creates a figure with three plots in a row corresponding to
+    % the displacement, velocity and acceleration over time, respectively
     xlabel_ = "Time [s]";
 
     figure_ = figure("name", title_);

@@ -2,6 +2,9 @@ function _ = plot_newmark_comparison(t, alfa,
     x_a, xdot_a, x2dot_a, beta_a,
     x_b, xdot_b, x2dot_b, beta_b,
     x_c, xdot_c, x2dot_c, beta_c)
+    % Creates a figure with three plots in a row corresponding to
+    % a comparison of displacement, velocity and acceleration as result
+    % of the Newmark method with different betas
 
     xlabel_ = "Time [s]";
     title_ = strcat("Comparison of Newmark Method for alfa = ", num2str(alfa), " and different betas");

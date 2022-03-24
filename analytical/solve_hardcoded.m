@@ -1,5 +1,5 @@
 function f = solve_hardcoded(t)
-    % Inverse Laplace Transform of function F(s) (see below)
+    % Inverse Laplace Transform of function F(s)
     %--------------------------------------------------------------------------
     % Calculates the inverse laplace transform of the function
     % F(s) = e^(-0.4s) (500 - 100s))/s^2 - (500e^(-0.2s))/s^2 + 200/s)/(s^2 + 3.0542 s + 1100)
@@ -11,6 +11,16 @@ function f = solve_hardcoded(t)
     % Output
     % ----------
     %       [f]:        Inverse Laplace Transform Vector   [n, 1]
+    %
+    % Notes
+    % ---------
+    % The function below was found using Wolfram Alpha.
+    %
+    % 1) To find the Laplace Transform in the first place:
+    % https://www.wolframalpha.com/input?i=Laplace+transform+1x%27%27+%2B+3.0542x%27%2B1100x+%3D+200+%2B+%28100-500t%29teta%28t-0.2%29%2B%28500t-300%29teta%28t-0.4%29
+    %
+    % 2) To find the Inverse Laplace Transform of the function founded on step 1:
+    % https://www.wolframalpha.com/input?i=inverse+Laplace+transform+%28%28e%5E%28-0.4+s%29+%28500+-+100+s%29%29%2Fs%5E2+-+%28500+e%5E%28-0.2+s%29%29%2Fs%5E2+%2B+200%2Fs%29%2F%28s%5E2+%2B+3.0542+s+%2B+1100%29
 
     f = zeros(length(t), 1);
 
