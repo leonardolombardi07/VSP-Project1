@@ -33,7 +33,7 @@ function [x, xdot, x2dot] = solve_by_laplace(times, m, c, k)
     L_left = (m * s^2 + c * s + k); % L{mx'' + cx' + kx}(s)
 
     % The laplace transform of x(t) then becomes:
-    L = F_laplace / (m * s^2 + c * s + k); % L{x(t)}(s)
+    L = L_right / L_left; % L{x(t)}(s)
 
     % To find x(t), calculate the inverse laplace transform of L{x(t)}(s)
     % ilaplace returns a symbolic variable representing x(t)
